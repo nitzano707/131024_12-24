@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Generation with Hugging Face</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Text Generation with Hugging Face</h1>
+  <input id="input" type="text" placeholder="Enter your text" />
+  <button onclick="generateText()">Generate</button>
+  <p id="result"></p>
+
+  <script>
+    async function generateText() {
+      const inputText = document.getElementById('input').value;
+      const response = await fetch('/.netlify/functions/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ inputs: inputText }),
+      });
+
+      const data = await response.json();
+      document.getElementById('result').innerText = data.result;
+    }
+  </script>
+</body>
+</html>
