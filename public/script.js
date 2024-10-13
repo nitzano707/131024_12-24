@@ -43,4 +43,4 @@ submit.addEventListener('click', async () => {
 });
 
 // רק לצורכי בדיקה - הסר לפני פריסה סופית
-console.log('API Key (4 תווים אחרונים):', HUGGING_FACE_API_KEY.slice(-4));
+console.log('API Key length:', HUGGING_FACE_API_KEY.length);
