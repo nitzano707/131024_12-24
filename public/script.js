@@ -2,7 +2,7 @@ const input = document.getElementById('input');
 const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
-// Netlify will replace this with the actual API key at build time
+// Netlify יחליף זאת במפתח ה-API האמיתי בזמן הבנייה
 const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
 
 submit.addEventListener('click', async () => {
@@ -10,8 +10,8 @@ submit.addEventListener('click', async () => {
     if (!prompt) return;
 
     submit.disabled = true;
-    submit.textContent = 'Generating...';
-    output.textContent = 'Waiting for response...';
+    submit.textContent = 'מייצר טקסט...';
+    output.textContent = 'ממתין לתשובה...';
 
     try {
         const response = await fetch('https://api-inference.huggingface.co/models/google/gemma-2-2b-jpn-it', {
@@ -24,16 +24,23 @@ submit.addEventListener('click', async () => {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`שגיאת HTTP! סטטוס: ${response.status}`);
         }
 
         const result = await response.json();
-        output.textContent = result[0].generated_text;
+        if (result && result[0] && result[0].generated_text) {
+            output.textContent = result[0].generated_text;
+        } else {
+            throw new Error('תגובה לא תקינה מה-API');
+        }
     } catch (error) {
-        console.error('Error:', error);
-        output.textContent = 'An error occurred while generating text.';
+        console.error('שגיאה:', error);
+        output.textContent = `אירעה שגיאה בעת יצירת הטקסט: ${error.message}`;
     } finally {
         submit.disabled = false;
-        submit.textContent = 'Generate Text';
+        submit.textContent = 'צור טקסט';
     }
 });
+
+// רק לצורכי בדיקה - הסר לפני פריסה סופית
+console.log('API Key (4 תווים אחרונים):', HUGGING_FACE_API_KEY.slice(-4));
