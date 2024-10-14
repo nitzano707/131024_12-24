@@ -3,7 +3,7 @@ const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
 // Netlify יחליף זאת במפתח ה-API האמיתי בזמן הבנייה
-const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
+const HUGGING_FACE_API_KEY = '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';
 
 console.log('API Key length:', HUGGING_FACE_API_KEY.length);
 
