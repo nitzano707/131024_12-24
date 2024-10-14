@@ -17,7 +17,7 @@ async function query(data) {
     const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer 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`,
+            'Authorization': `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`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
