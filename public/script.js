@@ -3,11 +3,13 @@ const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
 const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2-2b-jpn-it';
-const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
+//const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
+const HUGGING_FACE_API_KEY = process.env.HUGGING_FACE_API_KEY;
 
 // בדיקת המפתח (הסר לפני פריסה סופית)
 console.log('API Key length:', HUGGING_FACE_API_KEY.length);
 console.log('API Key starts with:', HUGGING_FACE_API_KEY.substring(0, 10));
+console.log('API Key:', HUGGING_FACE_API_KEY);
 
 async function query(data) {
     const response = await fetch(API_URL, {
