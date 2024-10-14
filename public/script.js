@@ -3,6 +3,7 @@ const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
 const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2-2b-jpn-it';
+const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
 
 async function retryFetch(url, options, maxRetries = 3) {
     for (let i = 0; i < maxRetries; i++) {
@@ -48,7 +49,7 @@ submit.addEventListener('click', async () => {
         const response = await retryFetch(API_URL, {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + process.env.HUGGING_FACE_API_KEY,
+                'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ 
