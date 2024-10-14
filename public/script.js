@@ -2,7 +2,8 @@ const input = document.getElementById('input');
 const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
-const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2b-it';
+//const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2b-it';
+const API_URL = 'Nitzantry1/mistralai-Mixtral-8x7B-Instruct-v0.1';
 //let HUGGING_FACE_API_KEY = '{{HUGGING_FACE_API_KEY}}';
 let HUGGING_FACE_API_KEY = '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';
 
