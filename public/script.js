@@ -6,9 +6,6 @@ const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2b-it'
 //let HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
 let HUGGING_FACE_API_KEY = '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';
 
-console.log('API Key length:', HUGGING_FACE_API_KEY.length);
-console.log('API Key starts with:', HUGGING_FACE_API_KEY.substring(0, 5));
-
 async function query(data) {
     const response = await fetch(API_URL, {
         method: 'POST',
@@ -29,11 +26,24 @@ async function query(data) {
 }
 
 function formatResponse(text) {
+    // מסיר את חזרה על הפרומפט (אם קיים)
+    const promptEnd = text.indexOf('\n');
+    if (promptEnd !== -1) {
+        text = text.substring(promptEnd + 1);
+    }
+    
     // מחלק את הטקסט לפסקאות
     const paragraphs = text.split('\n').filter(p => p.trim() !== '');
     
-    // יוצר אלמנטים של HTML עבור כל פסקה
-    return paragraphs.map(p => `<p>${p}</p>`).join('');
+    // מעבד כל פסקה
+    return paragraphs.map(p => {
+        if (p.startsWith('**') && p.endsWith('**')) {
+            // זו כותרת
+            return `<h2>${p.slice(2, -2)}</h2>`;
+        } else {
+            return `<p>${p}</p>`;
+        }
+    }).join('');
 }
 
 submit.addEventListener('click', async () => {
@@ -59,13 +69,3 @@ submit.addEventListener('click', async () => {
         submit.textContent = 'צור טקסט';
     }
 });
-
-// בדיקת תקינות הקישור ל-API בטעינת הדף
-(async () => {
-    try {
-        await query("Test");
-        console.log('API connection successful');
-    } catch (error) {
-        console.error('API connection failed:', error);
-    }
-})();
