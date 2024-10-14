@@ -6,19 +6,8 @@ const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2b-it'
 //let HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
 let HUGGING_FACE_API_KEY = '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';
 
-// נסיון לתקן מפתח שלא הוחלף
-if (HUGGING_FACE_API_KEY.startsWith('{{ ') && HUGGING_FACE_API_KEY.endsWith(' }}')) {
-    console.error('API key not properly set in Netlify');
-    HUGGING_FACE_API_KEY = prompt("Please enter your Hugging Face API key:");
-}
-
 console.log('API Key length:', HUGGING_FACE_API_KEY.length);
 console.log('API Key starts with:', HUGGING_FACE_API_KEY.substring(0, 5));
-
-if (!HUGGING_FACE_API_KEY || HUGGING_FACE_API_KEY.length !== 37 || !HUGGING_FACE_API_KEY.startsWith('hf_')) {
-    console.error('Invalid API key format');
-    throw new Error('API key configuration error');
-}
 
 async function query(data) {
     const response = await fetch(API_URL, {
@@ -39,16 +28,12 @@ async function query(data) {
     return await response.json();
 }
 
-async function retryQuery(data, maxRetries = 3) {
-    for (let i = 0; i < maxRetries; i++) {
-        try {
-            return await query(data);
-        } catch (error) {
-            console.log(`ניסיון ${i + 1} נכשל: ${error.message}`);
-            if (i === maxRetries - 1) throw error;
-            await new Promise(r => setTimeout(r, 2000));
-        }
-    }
+function formatResponse(text) {
+    // מחלק את הטקסט לפסקאות
+    const paragraphs = text.split('\n').filter(p => p.trim() !== '');
+    
+    // יוצר אלמנטים של HTML עבור כל פסקה
+    return paragraphs.map(p => `<p>${p}</p>`).join('');
 }
 
 submit.addEventListener('click', async () => {
@@ -57,18 +42,18 @@ submit.addEventListener('click', async () => {
 
     submit.disabled = true;
     submit.textContent = 'מייצר טקסט...';
-    output.textContent = 'ממתין לתשובה...';
+    output.innerHTML = '<div class="loading">ממתין לתשובה...</div>';
 
     try {
-        const result = await retryQuery(prompt);
+        const result = await query(prompt);
         if (result && result[0] && result[0].generated_text) {
-            output.textContent = result[0].generated_text;
+            output.innerHTML = formatResponse(result[0].generated_text);
         } else {
             throw new Error('תגובה לא תקינה מה-API');
         }
     } catch (error) {
         console.error('שגיאה:', error);
-        output.textContent = `אירעה שגיאה בעת יצירת הטקסט: ${error.message}`;
+        output.innerHTML = `<div class="error">אירעה שגיאה בעת יצירת הטקסט: ${error.message}</div>`;
     } finally {
         submit.disabled = false;
         submit.textContent = 'צור טקסט';
