@@ -3,13 +3,20 @@ const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
 const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2b-it';
-const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
+//let HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
+let HUGGING_FACE_API_KEY = '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';
+
+// נסיון לתקן מפתח שלא הוחלף
+if (HUGGING_FACE_API_KEY.startsWith('{{ ') && HUGGING_FACE_API_KEY.endsWith(' }}')) {
+    console.error('API key not properly set in Netlify');
+    HUGGING_FACE_API_KEY = prompt("Please enter your Hugging Face API key:");
+}
 
 console.log('API Key length:', HUGGING_FACE_API_KEY.length);
 console.log('API Key starts with:', HUGGING_FACE_API_KEY.substring(0, 5));
 
-if (HUGGING_FACE_API_KEY.startsWith('{{ ') || HUGGING_FACE_API_KEY.endsWith(' }}')) {
-    console.error('API key not properly set in Netlify');
+if (!HUGGING_FACE_API_KEY || HUGGING_FACE_API_KEY.length !== 37 || !HUGGING_FACE_API_KEY.startsWith('hf_')) {
+    console.error('Invalid API key format');
     throw new Error('API key configuration error');
 }
 
@@ -17,7 +24,7 @@ async function query(data) {
     const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
-            'Authorization': `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`,
+            'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
