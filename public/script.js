@@ -16,7 +16,7 @@ async function query(data) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
-            inputs: "Please provide a comprehensive and complete answer of at least 100 words, covering all aspects of the topic of: " + data,
+            inputs: "Please provide a comprehensive and complete answer, covering all aspects of the topic of: " + data,
             parameters: {
                 max_new_tokens: 500,
                 temperature: 0.7,
