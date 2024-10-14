@@ -2,7 +2,7 @@ const input = document.getElementById('input');
 const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
-const API_URL = 'https://api-inference.huggingface.co/models/yam-peleg/Hebrew-Mistral-7B';
+const API_URL = 'https://api-inference.huggingface.co/models/models/google/gemma-2b-it';
 
 //let HUGGING_FACE_API_KEY = '{{HUGGING_FACE_API_KEY}}';
 let HUGGING_FACE_API_KEY = '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';
