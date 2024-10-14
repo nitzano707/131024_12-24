@@ -2,7 +2,7 @@ const input = document.getElementById('input');
 const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
-const API_URL = 'https://api-inference.huggingface.co/models/bigscience/bloom';
+const API_URL = 'https://api-inference.huggingface.co/models/openai-community/gpt2';
 
 //let HUGGING_FACE_API_KEY = '{{HUGGING_FACE_API_KEY}}';
 let HUGGING_FACE_API_KEY = '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';
