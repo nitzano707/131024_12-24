@@ -2,7 +2,7 @@ const input = document.getElementById('input');
 const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
-const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2b-it';
+const API_URL = 'https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-1B';
 
 //let HUGGING_FACE_API_KEY = '{{HUGGING_FACE_API_KEY}}';
 let HUGGING_FACE_API_KEY = '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';
@@ -18,7 +18,7 @@ async function query(data) {
         body: JSON.stringify({ 
             inputs: data + " Please provide a comprehensive and complete answer of at least 100 words, covering all aspects of the topic of: ",
             parameters: {
-                max_new_tokens: 1000,
+                max_new_tokens: 500,
                 temperature: 0.7,
                 top_p: 0.95,
                 do_sample: true
