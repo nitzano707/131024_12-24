@@ -100,3 +100,40 @@ h1 {
     color: #e74c3c;
     font-weight: bold;
 }
+/* ... (הסגנונות הקודמים נשארים) ... */
+
+#output .main-header {
+    color: #2c3e50;
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 10px;
+}
+
+#output .sub-header {
+    color: #34495e;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #2980b9;
+    padding-bottom: 5px;
+}
+
+#output li {
+    margin-bottom: 10px;
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+#output p {
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+#output strong {
+    font-weight: bold;
+    color: #2980b9;
+}
