@@ -3,13 +3,7 @@ const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
 const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2-2b-jpn-it';
-//const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
-const HUGGING_FACE_API_KEY = process.env.HUGGING_FACE_API_KEY;
-
-// בדיקת המפתח (הסר לפני פריסה סופית)
-console.log('API Key length:', HUGGING_FACE_API_KEY.length);
-console.log('API Key starts with:', HUGGING_FACE_API_KEY.substring(0, 10));
-console.log('API Key:', HUGGING_FACE_API_KEY);
+const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}'; // Netlify יחליף זאת
 
 async function query(data) {
     const response = await fetch(API_URL, {
@@ -27,33 +21,6 @@ async function query(data) {
     return await response.json();
 }
 
-async function retryQuery(data, maxRetries = 3) {
-    for (let i = 0; i < maxRetries; i++) {
-        try {
-            return await query(data);
-        } catch (error) {
-            console.log(`ניסיון ${i + 1} נכשל: ${error.message}`);
-            if (i === maxRetries - 1) throw error;
-            await new Promise(r => setTimeout(r, 2000));
-        }
-    }
-}
-
-async function checkApiConnection() {
-    try {
-        const response = await fetch(API_URL, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`
-            }
-        });
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        console.log('API connection successful');
-    } catch (error) {
-        console.error('API connection failed:', error);
-    }
-}
-
 submit.addEventListener('click', async () => {
     const prompt = input.value;
     if (!prompt) return;
@@ -63,7 +30,7 @@ submit.addEventListener('click', async () => {
     output.textContent = 'ממתין לתשובה...';
 
     try {
-        const result = await retryQuery({ inputs: prompt });
+        const result = await query({ inputs: prompt });
         if (result && result[0] && result[0].generated_text) {
             output.textContent = result[0].generated_text;
         } else {
@@ -78,5 +45,6 @@ submit.addEventListener('click', async () => {
     }
 });
 
-// בדיקת תקינות הקישור ל-API בטעינת הדף
-checkApiConnection();
+// בדיקת תקינות המפתח (הסר לפני פריסה סופית)
+console.log('API Key length:', HUGGING_FACE_API_KEY.length);
+console.log('API Key starts with:', HUGGING_FACE_API_KEY.substring(0, 5));
