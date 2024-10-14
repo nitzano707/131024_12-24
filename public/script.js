@@ -6,7 +6,8 @@ const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2-2b-j
 const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
 
 // בדיקת המפתח (הסר לפני פריסה סופית)
-console.log('API Key (last 4 chars):', HUGGING_FACE_API_KEY.slice(-4));
+console.log('API Key length:', HUGGING_FACE_API_KEY.length);
+console.log('API Key starts with:', HUGGING_FACE_API_KEY.substring(0, 10));
 
 async function query(data) {
     const response = await fetch(API_URL, {
@@ -15,9 +16,7 @@ async function query(data) {
             'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
-        mode: 'cors',
-        credentials: 'same-origin'
+        body: JSON.stringify(data)
     });
     if (!response.ok) {
         const errorText = await response.text();
