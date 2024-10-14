@@ -5,3 +5,6 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[build.environment]
+  HUGGING_FACE_API_KEY = "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"
