@@ -14,11 +14,7 @@ async function query(data) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
-            inputs: data + " Please provide a comprehensive answer of at least 500 words.",
-            parameters: {
-                max_new_tokens: 1000,
-                temperature: 0.7
-            },
+            inputs: data,
             options: { wait_for_model: true }
         })
     });
@@ -43,7 +39,7 @@ function formatResponse(text) {
     return paragraphs.map(p => {
         if (p.startsWith('**') && p.endsWith('**')) {
             // זו כותרת
-            return `<h2>${p.slice(2, -2)}</h2>`;
+            return `<h2 class="response-header">${p.slice(2, -2)}</h2>`;
         } else if (p.includes('**')) {
             // יש הדגשה בתוך הפסקה
             return `<p>${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</p>`;
@@ -76,3 +72,4 @@ submit.addEventListener('click', async () => {
         submit.textContent = 'צור טקסט';
     }
 });
+
