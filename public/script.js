@@ -8,11 +8,16 @@ const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
 console.log('API Key length:', HUGGING_FACE_API_KEY.length);
 console.log('API Key starts with:', HUGGING_FACE_API_KEY.substring(0, 5));
 
+if (HUGGING_FACE_API_KEY.startsWith('{{ ') || HUGGING_FACE_API_KEY.endsWith(' }}')) {
+    console.error('API key not properly set in Netlify');
+    throw new Error('API key configuration error');
+}
+
 async function query(data) {
     const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
-            'Authorization': HUGGING_FACE_API_KEY,
+            'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
