@@ -14,7 +14,11 @@ async function query(data) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
-            inputs: data,
+            inputs: data + " Please provide a comprehensive answer of at least 500 words.",
+            parameters: {
+                max_new_tokens: 1000,
+                temperature: 0.7
+            },
             options: { wait_for_model: true }
         })
     });
@@ -40,6 +44,9 @@ function formatResponse(text) {
         if (p.startsWith('**') && p.endsWith('**')) {
             // זו כותרת
             return `<h2>${p.slice(2, -2)}</h2>`;
+        } else if (p.includes('**')) {
+            // יש הדגשה בתוך הפסקה
+            return `<p>${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</p>`;
         } else {
             return `<p>${p}</p>`;
         }
@@ -52,7 +59,7 @@ submit.addEventListener('click', async () => {
 
     submit.disabled = true;
     submit.textContent = 'מייצר טקסט...';
-    output.innerHTML = '<div class="loading">ממתין לתשובה...</div>';
+    output.innerHTML = '<div class="loading">ממתין לתשובה...<div class="spinner"></div></div>';
 
     try {
         const result = await query(prompt);
