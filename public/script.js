@@ -8,16 +8,11 @@ const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
 console.log('API Key length:', HUGGING_FACE_API_KEY.length);
 console.log('API Key starts with:', HUGGING_FACE_API_KEY.substring(0, 5));
 
-if (!HUGGING_FACE_API_KEY.startsWith('hf_')) {
-    console.error('Invalid API key format');
-    throw new Error('Invalid API key format');
-}
-
 async function query(data) {
     const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
+            'Authorization': HUGGING_FACE_API_KEY,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
