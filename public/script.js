@@ -2,7 +2,7 @@ const input = document.getElementById('input');
 const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
-const API_URL = 'https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-1B';
+const API_URL = 'https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct';
 
 //let HUGGING_FACE_API_KEY = '{{HUGGING_FACE_API_KEY}}';
 let HUGGING_FACE_API_KEY = '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';
