@@ -1,27 +1,24 @@
-body {
-    font-family: Arial, sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-#input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-#submit {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
 #output {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
     margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    min-height: 100px;
+}
+
+#output p {
+    margin-bottom: 15px;
+}
+
+.loading {
+    color: #888;
+    font-style: italic;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
 }
