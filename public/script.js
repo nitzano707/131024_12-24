@@ -17,7 +17,7 @@ async function query(data) {
     const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
+            'Authorization': `Bearer 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`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
