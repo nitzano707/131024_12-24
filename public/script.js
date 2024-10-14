@@ -5,6 +5,9 @@ const output = document.getElementById('output');
 const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2-2b-jpn-it';
 const HUGGING_FACE_API_KEY = '{{ HUGGING_FACE_API_KEY }}';
 
+// בדיקת המפתח (הסר לפני פריסה סופית)
+console.log('API Key (last 4 chars):', HUGGING_FACE_API_KEY.slice(-4));
+
 async function query(data) {
     const response = await fetch(API_URL, {
         method: 'POST',
@@ -12,10 +15,13 @@ async function query(data) {
             'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        mode: 'cors',
+        credentials: 'same-origin'
     });
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
     return await response.json();
 }
@@ -29,6 +35,21 @@ async function retryQuery(data, maxRetries = 3) {
             if (i === maxRetries - 1) throw error;
             await new Promise(r => setTimeout(r, 2000));
         }
+    }
+}
+
+async function checkApiConnection() {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`
+            }
+        });
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        console.log('API connection successful');
+    } catch (error) {
+        console.error('API connection failed:', error);
     }
 }
 
@@ -57,11 +78,4 @@ submit.addEventListener('click', async () => {
 });
 
 // בדיקת תקינות הקישור ל-API בטעינת הדף
-(async () => {
-    try {
-        await query({ inputs: "Test" });
-        console.log('API connection successful');
-    } catch (error) {
-        console.error('API connection failed:', error);
-    }
-})();
+checkApiConnection();
