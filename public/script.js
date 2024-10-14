@@ -2,10 +2,35 @@ const input = document.getElementById('input');
 const submit = document.getElementById('submit');
 const output = document.getElementById('output');
 
-// Netlify יחליף זאת במפתח ה-API האמיתי בזמן הבנייה
-const HUGGING_FACE_API_KEY = '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';
+const API_URL = 'https://api-inference.huggingface.co/models/google/gemma-2-2b-jpn-it';
 
-console.log('API Key length:', HUGGING_FACE_API_KEY.length);
+async function retryFetch(url, options, maxRetries = 3) {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) return response;
+            if (response.status === 503) {
+                console.log('המודל עדיין בטעינה, ממתין לניסיון נוסף...');
+                await new Promise(r => setTimeout(r, 2000));
+            } else {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        } catch (error) {
+            console.log(`ניסיון ${i + 1} נכשל: ${error}`);
+            if (i === maxRetries - 1) throw error;
+        }
+    }
+}
+
+async function isModelReady(url) {
+    try {
+        const response = await fetch(url, { method: 'GET' });
+        return response.ok;
+    } catch (error) {
+        console.error('שגיאה בבדיקת זמינות המודל:', error);
+        return false;
+    }
+}
 
 submit.addEventListener('click', async () => {
     const prompt = input.value;
@@ -16,10 +41,14 @@ submit.addEventListener('click', async () => {
     output.textContent = 'ממתין לתשובה...';
 
     try {
-        const response = await fetch('https://api-inference.huggingface.co/models/google/gemma-2-2b-jpn-it', {
+        if (!(await isModelReady(API_URL))) {
+            throw new Error('המודל אינו זמין כרגע, נסה שוב מאוחר יותר');
+        }
+
+        const response = await retryFetch(API_URL, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
+                'Authorization': 'Bearer ' + process.env.HUGGING_FACE_API_KEY,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ 
@@ -28,14 +57,7 @@ submit.addEventListener('click', async () => {
             })
         });
 
-        const responseText = await response.text();
-        console.log('Full API Response:', responseText);
-
-        if (!response.ok) {
-            throw new Error(`שגיאת HTTP! סטטוס: ${response.status}, תשובה: ${responseText}`);
-        }
-
-        const result = JSON.parse(responseText);
+        const result = await response.json();
         if (result && result[0] && result[0].generated_text) {
             output.textContent = result[0].generated_text;
         } else {
@@ -49,15 +71,3 @@ submit.addEventListener('click', async () => {
         submit.textContent = 'צור טקסט';
     }
 });
-
-// בדיקת תקינות הקישור ל-API
-fetch('https://api-inference.huggingface.co/models/google/gemma-2-2b-jpn-it', {
-    method: 'POST',
-    headers: {
-        'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`
-    },
-    body: JSON.stringify({ inputs: "Hello" })
-})
-.then(response => response.text())
-.then(result => console.log('API Test Response:', result))
-.catch(error => console.error('API Test Error:', error));
